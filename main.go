@@ -93,7 +93,7 @@ func send_mail(ent []Entry) {
 	// Connect to the server, authenticate, set the sender and recipient,
 	// and send the email all in one step.
 	email_string:="From: arpitjindal97@gmail.com\nSubject: Aircel-AMT Software\nTo: arpitjindal97@gmail.com"+
-		"\nYour mechanism just caught a thief. Here are the details:\n"
+		"\nYour mechanism just caught a thief. Here are the details.\n\n"
 
 		for i:=0;i<len(ent);i++{
 			email_string += "Hostname : "+ent[i].Hostname+
