@@ -9,7 +9,7 @@ task :deploy do
 		if [ \"$docker_run_id\" == \"\" ];then exit 0
 		else	docker stop $docker_run_id
 			docker rm $docker_run_id
-			docker rmi $docker_run_id
+			docker rmi #{fetch(:docker_img)}
 		fi"
 		execute "docker pull #{fetch(:docker_img)} >/dev/null"
 		execute "docker run -d -p 80:8080 -v /home/arpit/mongo:/data/db #{fetch(:docker_img)}"
