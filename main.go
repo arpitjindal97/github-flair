@@ -8,17 +8,13 @@ import (
 	"bytes"
 	"encoding/json"
 	"log"
+	"net/smtp"
 )
 
 func main() {
 
-	//http.HandleFunc("/github.png", index)
 	http.HandleFunc("/AMT", amt)
 
-	//fs := http.FileServer(http.Dir("/home/arpit/github-flair-server/static"))
-	//http.Handle("/.well-known/", http.StripPrefix("/.well-known", fs))
-
-	//http.ListenAndServe(":80",nil)
 	http.ListenAndServeTLS(":8080", "certificate.pem",
 		"private.key", nil)
 }
@@ -72,7 +68,8 @@ func amt(w http.ResponseWriter, r *http.Request) {
 		}
 	} else {
 		collection =session.DB("personal").C("amt_thief")
-		log.Println("Thief caught!!!")
+		//log.Println("Thief caught!!!")
+		send_mail(ent)
 		collection.Insert(thief...)
 	}
 	buffer := new(bytes.Buffer)
@@ -81,4 +78,36 @@ func amt(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	w.Write(buffer.Bytes())
 
+}
+
+var mail_user,mail_pass,mail_smtp_host,mail_smtp_port string
+func send_mail(ent []Entry) {
+
+	// Set up authentication information.
+	auth := smtp.PlainAuth(
+		"",
+		mail_user,
+		mail_pass,
+		mail_smtp_host,
+	)
+	// Connect to the server, authenticate, set the sender and recipient,
+	// and send the email all in one step.
+	email_string:="From: arpitjindal97@gmail.com\nSubject: Aircel-AMT Software\nTo: arpitjindal97@gmail.com"+
+		"\nYour mechanism just caught a thief. Here are the details:\n"
+
+		for i:=0;i<len(ent);i++{
+			email_string += "Hostname : "+ent[i].Hostname+
+				"\tInterfaceName : "+ent[i].InterfaceName+"\tMAC : "+ent[i].MAC+"\n";
+		}
+
+	err := smtp.SendMail(
+		mail_smtp_host+":"+mail_smtp_port,
+		auth,
+		mail_user,
+		[]string{"arpitjindal97@gmail.com"},
+		[]byte(email_string),
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
