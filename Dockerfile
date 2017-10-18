@@ -6,7 +6,7 @@ RUN apt-get update \
 RUN mkdir /arpit
 
 COPY main /arpit
-COPY git-ssh.key /arpit/private.key
+COPY secrets/git-ssh.key /arpit/private.key
 COPY certificate.pem /arpit
 COPY entrypoint.sh /arpit
 EXPOSE 8080
