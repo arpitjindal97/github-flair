@@ -10,5 +10,5 @@ COPY git-ssh.key /arpit/private.key
 COPY certificate.pem /arpit
 COPY entrypoint.sh /arpit
 EXPOSE 8080
-chmod +x /arpit/entrypoint.sh
+RUN chmod +x /arpit/entrypoint.sh
 ENTRYPOINT ["/arpit/entrypoint.sh"]
