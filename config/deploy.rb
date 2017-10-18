@@ -5,7 +5,7 @@ set :server_url, "#{fetch(:server_user)}@#{fetch(:server_host)}"
 
 task :deploy do
 	on "#{fetch(:server_url)}" do
-		execute "export docker_run_id=$(docker ps -a| grep #{fetch(:docker)}|cut -d ' ' -f 1 ) 
+		execute "export docker_run_id=$(docker ps -a| grep #{fetch(:docker_img)}|cut -d ' ' -f 1 ) 
 		if [ \"$docker_run_id\" == \"\" ];then exit 0
 		else	docker stop $docker_run_id
 			docker rm $docker_run_id
