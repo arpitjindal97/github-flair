@@ -1,0 +1,17 @@
+language: go
+before_install:
+  - gem install capistrano
+before_script:
+  - env|sort
+  - mkdir secrets && cd secrets
+  - wget --user="$BITBUCKET_EMAIL" --password="$BITBUCKET_PASS" -i ../urls.txt
+  - ls -alh && eval "$(cat *.sh)" && cd ..
+  - image="$DOCKER_IMG"
+script:
+  - go build *.go
+  - docker build -t $image .
+after_script:
+  - docker images
+  - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+  - docker push $image
+  - cap production deploy

@@ -7,6 +7,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 	"bytes"
 	"encoding/json"
+	"log"
 )
 
 func main() {
@@ -38,7 +39,7 @@ func amt(w http.ResponseWriter, r *http.Request) {
 	session,_ := mgo.Dial("127.0.0.1")
 	defer session.Close()
 
-	collection :=session.DB("personal").C("amt")
+	collection :=session.DB("personal").C("amt_thief")
 
 	result := Entry{}
 
@@ -49,8 +50,10 @@ func amt(w http.ResponseWriter, r *http.Request) {
 
 		some[i] = bson.M{"mac":ent[i].MAC}
 		thief[i] = bson.M{"mac":ent[i].MAC,"hostname":ent[i].Hostname,"interfacename":ent[i].InterfaceName}
+		collection.RemoveAll(thief[i])
 	}
 
+	collection =session.DB("personal").C("amt")
 	collection.Find(bson.M{"$or": some}).One(&result)
 
 	message := "You are not authorized person.\nTo gain access to this software, Please contact"+
@@ -60,17 +63,17 @@ func amt(w http.ResponseWriter, r *http.Request) {
 		for i:=0;i<len(ent);i++{
 			if ent[i].MAC == result.MAC{
 				collection.Update(
-								bson.M{"mac":result.MAC},
-								bson.M{"hostname":ent[i].Hostname,
-										"mac":ent[i].MAC,
-										"interfacename":ent[i].InterfaceName})
+					bson.M{"mac":result.MAC},
+					bson.M{"hostname":ent[i].Hostname,
+						"mac":ent[i].MAC,
+						"interfacename":ent[i].InterfaceName})
 				break;
 			}
 		}
 	} else {
 		collection =session.DB("personal").C("amt_thief")
+		log.Println("Thief caught!!!")
 		collection.Insert(thief...)
-
 	}
 	buffer := new(bytes.Buffer)
 	buffer.WriteString(message)
