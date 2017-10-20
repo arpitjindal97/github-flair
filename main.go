@@ -14,6 +14,7 @@ import (
 func main() {
 
 	github_flair.SetTorProxy()
+	github_flair.DownloadImages()
 
 	http.HandleFunc("/AMT", amt)
 	http.HandleFunc("/github.png",github_flair.Flair)
@@ -21,7 +22,6 @@ func main() {
 	http.ListenAndServeTLS(":8080", "certificate.pem",
 		"private.key", nil)
 
-	github_flair.DownloadImages()
 }
 
 type Entry struct {
