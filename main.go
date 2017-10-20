@@ -2,21 +2,26 @@ package main
 
 import (
 	"net/http"
-
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 	"bytes"
 	"encoding/json"
 	"log"
 	"net/smtp"
+	"github.com/arpitjindal97/github-flair-server"
 )
 
 func main() {
 
+	github_flair.SetTorProxy()
+
 	http.HandleFunc("/AMT", amt)
+	http.HandleFunc("/github.png",github_flair.Flair)
 
 	http.ListenAndServeTLS(":8080", "certificate.pem",
 		"private.key", nil)
+
+	github_flair.DownloadImages()
 }
 
 type Entry struct {
