@@ -9,7 +9,7 @@ before_script:
   - image="$DOCKER_IMG"
 script:
   - go build -ldflags "-X main.mail_user=$mail_user -X main.mail_pass=$mail_pass -X main.mail_smtp_host=$mail_smtp_host -X main.mail_smtp_port=$mail_smtp_port" main.go
-  - go build https_server.go
+  - cd reverse_proxy && go build https_server.go && mv https_server ../ && cd ..
   - docker build -t $image .
 after_script:
   - docker images
