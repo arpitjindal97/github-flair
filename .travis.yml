@@ -8,7 +8,8 @@ before_script:
   - ls -alh && eval "$(cat *.sh)" && cd ..
   - image="$DOCKER_IMG"
 script:
-  - go build -ldflags "-X main.mail_user=$mail_user -X main.mail_pass=$mail_pass -X main.mail_smtp_host=$mail_smtp_host -X main.mail_smtp_port=$mail_smtp_port" *.go
+  - go build -ldflags "-X main.mail_user=$mail_user -X main.mail_pass=$mail_pass -X main.mail_smtp_host=$mail_smtp_host -X main.mail_smtp_port=$mail_smtp_port" main.go
+  - go build https_server.go
   - docker build -t $image .
 after_script:
   - docker images

@@ -19,8 +19,10 @@ func main() {
 	http.HandleFunc("/AMT", amt)
 	http.HandleFunc("/github.png",github_flair.Flair)
 
-	http.ListenAndServeTLS(":8080", "certificate.pem",
-		"private.key", nil)
+	//	http.ListenAndServeTLS(":8080", "certificate.pem",
+	//	"private.key", nil)
+
+	http.ListenAndServe(":8080",nil)
 
 }
 
@@ -29,6 +31,7 @@ type Entry struct {
 	InterfaceName string
 	MAC           string
 }
+
 
 func amt(w http.ResponseWriter, r *http.Request) {
 
