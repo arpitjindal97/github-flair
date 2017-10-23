@@ -12,7 +12,7 @@ task :deploy do
 			docker rmi #{fetch(:docker_img)}
 		fi"
 		execute "docker pull #{fetch(:docker_img)} >/dev/null"
-		execute "docker run -d -p 443:443 -v /home/arpit/mongo:/data/db #{fetch(:docker_img)}"
+		execute "docker run -d -p 80:443 -v /home/arpit/mongo:/data/db #{fetch(:docker_img)}"
 
 	end
 end
