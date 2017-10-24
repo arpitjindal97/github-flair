@@ -10,3 +10,8 @@ sub vcl_recv {
         return (pass);
     }
 }
+
+sub vcl_backend_response {
+    set beresp.ttl = 20h;
+
+}
