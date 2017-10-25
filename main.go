@@ -17,7 +17,7 @@ func main() {
 	github_flair.DownloadImages()
 
 	http.HandleFunc("/AMT", amt)
-	http.HandleFunc("/github.png",github_flair.Flair)
+	http.HandleFunc("/github/",github_flair.Flair)
 
 	//	http.ListenAndServeTLS(":8080", "certificate.pem",
 	//	"private.key", nil)
