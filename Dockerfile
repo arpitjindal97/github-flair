@@ -1,7 +1,7 @@
 FROM mongo:latest
 
 RUN apt-get update \
-        && apt-get install -y --no-install-recommends tor varnish cron
+        && apt-get install -y --no-install-recommends tor varnish
 
 RUN mkdir /arpit
 
@@ -12,8 +12,10 @@ COPY certificate.pem /arpit
 COPY entrypoint.sh /arpit
 COPY default.vcl /arpit
 
-COPY crontab /etc/cron.d/crontab
-RUN chmod +x /etc/cron.d/crontab
+#COPY cron_file /arpit/tor_restart.sh
+#RUN chmod +x /arpit/tor_restart.sh
+#RUN echo "* * * * * root /arpit/tor_restart.sh > /dev/fd/1" > /etc/cron.d/tor_cron
+#RUN crontab /etc/cron.d/tor_cron
 
 EXPOSE 443
 RUN chmod +x /arpit/entrypoint.sh

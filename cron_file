@@ -1,0 +1,9 @@
+kill -9 $(ps aux | grep '/arpit/main' | grep -v grep | awk '{print $2}') ;
+
+# kill -9 $(ps aux | grep tor | grep -v grep | awk '{print $2}') ;
+
+# env > /arpit/log1.txt ;
+
+#/etc/init.d/tor restart ;
+
+/bin/bash -c '/arpit/main' &
