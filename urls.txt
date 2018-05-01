@@ -1,6 +1,5 @@
-https://bitbucket.org/arpitjindal97/secrets/raw/master/server-2.sh
-https://bitbucket.org/arpitjindal97/secrets/raw/master/server-2-ssh.key
-https://bitbucket.org/arpitjindal97/secrets/raw/master/git-ssh.key
+https://bitbucket.org/arpitjindal97/secrets/raw/master/doorlock.sh
+https://bitbucket.org/arpitjindal97/secrets/raw/master/doorlock-root-ssh.key
 https://bitbucket.org/arpitjindal97/secrets/raw/master/docker.sh
 https://bitbucket.org/arpitjindal97/secrets/raw/master/personal-server.sh
 https://bitbucket.org/arpitjindal97/secrets/raw/master/gmail.sh
