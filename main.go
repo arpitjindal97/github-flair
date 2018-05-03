@@ -16,7 +16,7 @@ import (
 
 func main() {
 
-	DownloadImages()
+	PrepareTemplate()
 
 	_, err := ioutil.ReadDir("flairs")
 
