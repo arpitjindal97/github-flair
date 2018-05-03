@@ -6,6 +6,7 @@ import (
 	"image/png"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 func main() {
