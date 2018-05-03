@@ -3,3 +3,4 @@
 *.key
 secrets/
 flairs/
+main-packr.go
