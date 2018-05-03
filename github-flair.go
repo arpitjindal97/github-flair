@@ -141,9 +141,9 @@ func FillIcon(im *image.RGBA, x1, y1 int, url string, theme string) {
 	}
 	//fmt.Println();
 }
-func DownloadImages() {
+func PrepareTemplate() {
 
-	fmt.Println("Downloading Images ...")
+	fmt.Println("Preparing Template ...")
 
 	//preparing the background image
 	clean = image.NewRGBA(image.Rectangle{image.Point{0, 0}, image.Point{250, 90}})

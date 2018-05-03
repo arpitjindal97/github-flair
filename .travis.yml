@@ -7,8 +7,8 @@ before_script:
   - env|sort
   - mkdir secrets && cd secrets
   - wget --user="$BITBUCKET_EMAIL" --password="$BITBUCKET_PASS" -i ../urls.txt
-  - ls -alh && eval "$(cat *.sh)" && cd ..
-  - mv secrets/certificate.pem secrets/ssl-private.key .
+  - ls -alh && cd ..
+  - mv secrets/ssl-private.key secrets/certificate.pem .
 script:
   - $GOPATH/bin/packr
   - go build main.go main-packr.go github-flair.go
