@@ -1,6 +1,4 @@
-https://bitbucket.org/arpitjindal97/secrets/raw/master/doorlock.sh
-https://bitbucket.org/arpitjindal97/secrets/raw/master/doorlock-root-ssh.key
-https://bitbucket.org/arpitjindal97/secrets/raw/master/docker.sh
-https://bitbucket.org/arpitjindal97/secrets/raw/master/personal-server.sh
-https://bitbucket.org/arpitjindal97/secrets/raw/master/gmail.sh
-https://bitbucket.org/arpitjindal97/secrets/raw/master/git-ssh.key
+https://bitbucket.org/arpitjindal97/secrets/raw/master/github-flair/github-flair-docker.sh
+https://bitbucket.org/arpitjindal97/secrets/raw/master/github-flair/ssl-private.key
+https://bitbucket.org/arpitjindal97/secrets/raw/master/github-flair/certificate.pem
+https://bitbucket.org/arpitjindal97/secrets/raw/master/github-flair/access_token.txt

@@ -1,18 +1,13 @@
 language: go
-before_install:
-  - gem install capistrano
+go:
+  - master
 before_script:
   - env|sort
   - mkdir secrets && cd secrets
   - wget --user="$BITBUCKET_EMAIL" --password="$BITBUCKET_PASS" -i ../urls.txt
   - ls -alh && eval "$(cat *.sh)" && cd ..
-  - image="$DOCKER_IMG"
+  - mv secrets/certificate.pem secrets/ssl-private.key .
 script:
-  - go build -ldflags "-X main.mail_user=$mail_user -X main.mail_pass=$mail_pass -X main.mail_smtp_host=$mail_smtp_host -X main.mail_smtp_port=$mail_smtp_port" main.go
-  - cd reverse_proxy && go build https_server.go && mv https_server ../ && cd ..
-  - docker build -t $image .
-after_script:
-  - docker images
-  - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-  - docker push $image
-  - cap production deploy
+  - $GOPATH/bin/packr
+  - go build main.go main-packr.go github-flair.go
+  - docker build -t "testing_image" .
