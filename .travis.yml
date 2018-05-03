@@ -1,6 +1,8 @@
 language: go
 go:
   - master
+before_install:
+  - go get -t -v github.com/gobuffalo/packr/...
 before_script:
   - env|sort
   - mkdir secrets && cd secrets

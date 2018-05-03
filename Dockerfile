@@ -3,6 +3,8 @@ FROM mongo:latest
 RUN mkdir /arpit
 
 COPY main /arpit
+COPY certificate.pem /arpit
+COPY ssl-private.key /arpit
 COPY entrypoint.sh /arpit
 COPY cron_file /arpit
 COPY update /arpit
