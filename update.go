@@ -30,7 +30,7 @@ func RefreshImages() {
 		os.Remove("flairs/" + user.Username + ".png.dark")
 
 		hours := time.Now().Sub(user.Timestamp).Hours()
-		if hours > 10 {
+		if hours > 120 {
 
 			collection.Remove(bson.M{"username": user.Username})
 

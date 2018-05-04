@@ -8,6 +8,7 @@ import (
 	"image"
 	"image/png"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"os"
 	"strconv"
@@ -29,10 +30,10 @@ func main() {
 
 	http.HandleFunc("/github/", Flair)
 
-	// http.ListenAndServeTLS(":8080", "secrets/certificate.pem",
-	//	"secrets/ssl-private.key", nil)
+	http.ListenAndServeTLS(":443", "certificate.pem",
+		"ssl-private.key", nil)
 
-	http.ListenAndServe(":8080", nil)
+	// http.ListenAndServe(":8080", nil)
 
 }
 
@@ -45,6 +46,8 @@ func Flair(w http.ResponseWriter, r *http.Request) {
 	if theme == "" {
 		theme = "clean"
 	}
+
+	log.Println(username)
 
 	var myimage image.Image
 
