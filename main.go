@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"github.com/globalsign/mgo"
 	"github.com/globalsign/mgo/bson"
+	"github.com/mileusna/crontab"
 	"image"
 	"image/png"
 	"io/ioutil"
@@ -19,10 +20,12 @@ func main() {
 	PrepareTemplate()
 
 	_, err := ioutil.ReadDir("flairs")
-
 	if err != nil {
 		os.Mkdir("flairs", 0755)
 	}
+
+	ctab := crontab.New()
+	ctab.AddJob("10 23 * * *", RefreshImages)
 
 	http.HandleFunc("/github/", Flair)
 
