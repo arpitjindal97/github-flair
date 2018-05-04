@@ -3,6 +3,6 @@
 secrets/
 flairs/
 main-packr.go
-certificate.pem
+crt-bundle.pem
 ssl-private.key
 main

@@ -30,7 +30,7 @@ func main() {
 
 	http.HandleFunc("/github/", Flair)
 
-	http.ListenAndServeTLS(":443", "certificate.pem",
+	http.ListenAndServeTLS(":443", "crt-bundle.pem",
 		"ssl-private.key", nil)
 
 	// http.ListenAndServe(":8080", nil)
