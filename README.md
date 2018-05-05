@@ -1,4 +1,4 @@
-# Github Flair ![build passing](https://api.travis-ci.org/arpitjindal97/personal-server.svg?branch=master)
+# Github Flair ![build passing](https://api.travis-ci.org/arpitjindal97/github-flair.svg?branch=master)
 
 It is a profile flair inspired by StackExchange Flair. It reflects few details of your Github account.
 
