@@ -4,10 +4,8 @@ import (
 	"bytes"
 	"github.com/globalsign/mgo"
 	"github.com/globalsign/mgo/bson"
-	"github.com/mileusna/crontab"
 	"image"
 	"image/png"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -15,27 +13,6 @@ import (
 	"strings"
 	"time"
 )
-
-func main() {
-
-	PrepareTemplate()
-
-	_, err := ioutil.ReadDir("flairs")
-	if err != nil {
-		os.Mkdir("flairs", 0755)
-	}
-
-	ctab := crontab.New()
-	ctab.AddJob("10 23 * * *", RefreshImages)
-
-	http.HandleFunc("/github/", Flair)
-
-	http.ListenAndServeTLS(":443", "crt-bundle.pem",
-		"ssl-private.key", nil)
-
-	// http.ListenAndServe(":8080", nil)
-
-}
 
 func Flair(w http.ResponseWriter, r *http.Request) {
 
@@ -73,7 +50,7 @@ type User struct {
 
 func ExistsInDatabase(username string) bool {
 
-	session, _ := mgo.Dial("127.0.0.1")
+	session, _ := mgo.Dial("mongo")
 	defer session.Close()
 
 	collection := session.DB("flair").C("github")
@@ -90,7 +67,7 @@ func ExistsInDatabase(username string) bool {
 
 func UpdateDatabase(username string) {
 
-	session, _ := mgo.Dial("127.0.0.1")
+	session, _ := mgo.Dial("mongo")
 	defer session.Close()
 
 	collection := session.DB("flair").C("github")
@@ -104,7 +81,7 @@ func UpdateDatabase(username string) {
 
 func InsertDatabase(username string) {
 
-	session, _ := mgo.Dial("127.0.0.1")
+	session, _ := mgo.Dial("mongo")
 	defer session.Close()
 
 	collection := session.DB("flair").C("github")
@@ -117,13 +94,13 @@ func InsertDatabase(username string) {
 }
 func PutInFolder(username string) {
 
-	file, _ := os.Create("flairs/" + username + ".png.clean")
+	file, _ := os.Create("images/" + username + ".png.clean")
 
 	png.Encode(file, CreateFlair(username, "clean"))
 
 	file.Close()
 
-	file, _ = os.Create("flairs/" + username + ".png.dark")
+	file, _ = os.Create("images/" + username + ".png.dark")
 
 	png.Encode(file, CreateFlair(username, "dark"))
 
@@ -132,7 +109,7 @@ func PutInFolder(username string) {
 
 func GetFromFolder(username string, theme string) image.Image {
 
-	file, err := os.Open("flairs/" + username + ".png." + theme)
+	file, err := os.Open("images/" + username + ".png." + theme)
 
 	defer file.Close()
 

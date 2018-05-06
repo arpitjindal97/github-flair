@@ -236,12 +236,13 @@ func FetchCounts(username string) (string, string) {
 func HttpGet(url string) *http.Response {
 	var resp *http.Response
 
-	box := packr.NewBox("./secrets")
+	byteArray, err := ioutil.ReadFile("secrets/access_token.txt")
 
-	body, err := box.MustString("access_token.txt")
+	n := bytes.Index(byteArray, []byte{0})
+	s := string(byteArray[:n])
 
 	if err == nil {
-		url = url + "?access_token=" + body[:len(body)-1]
+		url = url + "?access_token=" + s
 	}
 
 	resp, err = http.Get(url)

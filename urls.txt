@@ -1,3 +1,0 @@
-https://bitbucket.org/arpitjindal97/secrets/raw/master/github-flair/ssl-private.key
-https://bitbucket.org/arpitjindal97/secrets/raw/master/github-flair/crt-bundle.pem
-https://bitbucket.org/arpitjindal97/secrets/raw/master/github-flair/access_token.txt

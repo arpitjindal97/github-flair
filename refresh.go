@@ -11,7 +11,7 @@ import (
 
 func RefreshImages() {
 
-	session, _ := mgo.Dial("127.0.0.1")
+	session, _ := mgo.Dial("mongo")
 	defer session.Close()
 
 	collection := session.DB("flair").C("github")
@@ -26,8 +26,8 @@ func RefreshImages() {
 
 	for _, user := range result {
 
-		os.Remove("flairs/" + user.Username + ".png.clean")
-		os.Remove("flairs/" + user.Username + ".png.dark")
+		os.Remove("images/" + user.Username + ".png.clean")
+		os.Remove("images/" + user.Username + ".png.dark")
 
 		hours := time.Now().Sub(user.Timestamp).Hours()
 		if hours > 120 {
@@ -36,11 +36,11 @@ func RefreshImages() {
 
 		} else {
 
-			file, _ := os.Create("flairs/" + user.Username + ".png.clean")
+			file, _ := os.Create("images/" + user.Username + ".png.clean")
 			png.Encode(file, CreateFlair(user.Username, "clean"))
 			defer file.Close()
 
-			file1, _ := os.Create("flairs/" + user.Username + ".png.dark")
+			file1, _ := os.Create("images/" + user.Username + ".png.dark")
 			png.Encode(file1, CreateFlair(user.Username, "dark"))
 
 			defer file1.Close()
