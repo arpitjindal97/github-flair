@@ -1,8 +1,4 @@
 *.swp
-*.key
 secrets/
-flairs/
-main-packr.go
-crt-bundle.pem
-ssl-private.key
-main
+images/
+output/
