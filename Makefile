@@ -7,11 +7,14 @@ $(PACKR):
 	@echo "Installing packr"
 	go get -u github.com/gobuffalo/packr/...
 
+dependency:
+	go get -t ./...
+
 clean:
 	@echo "Cleaning the output directory"
 	rm -rf output
 
-build: $(PACKR) clean
+build: $(PACKR) dependency clean
 ifeq ($(env),prod)
 	@echo "Making Production build"
 	packr
