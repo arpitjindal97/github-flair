@@ -13,9 +13,9 @@ func main() {
 
 	PrepareTemplate()
 
-	_, err := ioutil.ReadDir("flairs")
+	_, err := ioutil.ReadDir("/data/flair-images")
 	if err != nil {
-		os.Mkdir("flairs", 0755)
+		os.Mkdir("/data/flair-images", 0755)
 	}
 
 	ctab := crontab.New()

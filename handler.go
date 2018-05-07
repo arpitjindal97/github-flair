@@ -94,13 +94,13 @@ func InsertDatabase(username string) {
 }
 func PutInFolder(username string) {
 
-	file, _ := os.Create("images/" + username + ".png.clean")
+	file, _ := os.Create("/data/flair-images/" + username + ".png.clean")
 
 	png.Encode(file, CreateFlair(username, "clean"))
 
 	file.Close()
 
-	file, _ = os.Create("images/" + username + ".png.dark")
+	file, _ = os.Create("/data/flair-images/" + username + ".png.dark")
 
 	png.Encode(file, CreateFlair(username, "dark"))
 
@@ -109,7 +109,7 @@ func PutInFolder(username string) {
 
 func GetFromFolder(username string, theme string) image.Image {
 
-	file, err := os.Open("images/" + username + ".png." + theme)
+	file, err := os.Open("/data/flair-images/" + username + ".png." + theme)
 
 	defer file.Close()
 

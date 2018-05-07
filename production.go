@@ -3,6 +3,9 @@
 package main
 
 import (
+	"crypto/tls"
+	"fmt"
+	"github.com/gobuffalo/packr"
 	"github.com/mileusna/crontab"
 	"io/ioutil"
 	"net/http"
@@ -13,9 +16,9 @@ func main() {
 
 	PrepareTemplate()
 
-	_, err := ioutil.ReadDir("flairs")
+	_, err := ioutil.ReadDir("/data/flair-images")
 	if err != nil {
-		os.Mkdir("flairs", 0755)
+		os.Mkdir("/data/flair-images", 0755)
 	}
 
 	ctab := crontab.New()
@@ -23,8 +26,29 @@ func main() {
 
 	http.HandleFunc("/github/", Flair)
 
-	http.ListenAndServeTLS(":443", "secrets/crt-bundle.pem",
-		"secrets/ssl-private.key", nil)
+	box := packr.NewBox("./secrets")
+
+	certBundle, _ := box.MustBytes("crt-bundle.pem")
+
+	sslPrivate, _ := box.MustBytes("ssl-private.key")
+
+	certsPair, err := tls.X509KeyPair(certBundle, sslPrivate)
+	if err != nil {
+		fmt.Println("error in creating x509 pair", err)
+
+	}
+
+	config := &tls.Config{Certificates: []tls.Certificate{certsPair},
+		// Turn off warning about self signed cert
+		InsecureSkipVerify: true,
+	}
+
+	server := http.Server{
+		TLSConfig: config,
+		Addr:      ":443",
+	}
+
+	server.ListenAndServeTLS("", "")
 
 	// http.ListenAndServe(":8080", nil)
 

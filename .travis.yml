@@ -1,15 +1,8 @@
 language: go
 go:
   - master
-before_install:
-  - go get -t -v github.com/gobuffalo/packr/...
 before_script:
-  - env|sort
-  - mkdir secrets && cd secrets
-  - wget --user="$BITBUCKET_EMAIL" --password="$BITBUCKET_PASS" -i ../urls.txt
-  - ls -alh && cd ..
-  - mv secrets/ssl-private.key secrets/crt-bundle.pem .
+  - env | sort
+  - mkdir secrets
 script:
-  - $GOPATH/bin/packr
-  - go build main.go main-packr.go update.go github-flair.go
-  - docker build -t "testing_image" .
+  - make build env=devel 

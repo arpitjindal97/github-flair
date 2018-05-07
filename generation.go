@@ -6,7 +6,9 @@ import (
 	"fmt"
 	"github.com/fogleman/gg"
 	"github.com/gobuffalo/packr"
+	"github.com/golang/freetype/truetype"
 	"github.com/nfnt/resize"
+	"golang.org/x/image/font"
 	"image"
 	"image/color"
 	"image/jpeg"
@@ -74,7 +76,8 @@ func CreateFlair(username string, theme string) image.Image {
 	dc := gg.NewContextForRGBA(myimage)
 	dc.SetRGB255(3, 102, 214)
 	//dc.SetRGB255(192, 192, 192)
-	dc.LoadFontFace("arialbd.ttf", 13)
+
+	dc.SetFontFace(GetFontFace("arialbd.ttf", 13))
 
 	dc.DrawStringAnchored(fmt.Sprint(data["login"]), 122, 12+6, 0, 0)
 	if theme == "dark" {
@@ -236,13 +239,13 @@ func FetchCounts(username string) (string, string) {
 func HttpGet(url string) *http.Response {
 	var resp *http.Response
 
-	byteArray, err := ioutil.ReadFile("secrets/access_token.txt")
+	box := packr.NewBox("./secrets")
 
-	n := bytes.Index(byteArray, []byte{0})
-	s := string(byteArray[:n])
+	body, err := box.MustString("access_token.txt")
 
 	if err == nil {
-		url = url + "?access_token=" + s
+		url = url + "?access_token=" + body[:len(body)-1]
+
 	}
 
 	resp, err = http.Get(url)
@@ -250,4 +253,27 @@ func HttpGet(url string) *http.Response {
 		panic(err)
 	}
 	return resp
+}
+
+func GetFontFace(filename string, points float64) font.Face {
+
+	box := packr.NewBox("./assets")
+
+	fontBytes, err := box.MustBytes(filename)
+
+	if err != nil {
+		panic(err)
+	}
+
+	f, err := truetype.Parse(fontBytes)
+	if err != nil {
+		panic(err)
+		return nil
+
+	}
+	face := truetype.NewFace(f, &truetype.Options{
+		Size: points,
+		// Hinting: font.HintingFull,
+	})
+	return face
 }
