@@ -1,8 +1,10 @@
 language: go
+services:
+    - docker
 go:
-  - master
+    - master
 before_script:
-  - env | sort
-  - mkdir secrets
+    - env | sort
+    - mkdir secrets
 script:
-  - make build env=devel 
+    - make build env=devel
