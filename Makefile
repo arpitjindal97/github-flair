@@ -34,7 +34,6 @@ endif
 run: build
 ifeq ($(env),prod)
 	@echo "Running Production images"
-	mkdir -p data-db
 	docker-compose -f prod-compose.yml up
 else
 	@echo "Running Development images"

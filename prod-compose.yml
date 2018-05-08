@@ -3,11 +3,7 @@ services:
     web:
         build: .
         image: github-flair-web:prod
-        volumes:
-            - ./data-db/flair-images:/data/flair-images
         ports:
             - "443:443"
     mongo:
-        image: mongo:latest
-        volumes:
-            - ./data-db/db:/data/db
+        image: "mongo:latest"
