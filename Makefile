@@ -8,13 +8,14 @@ $(PACKR):
 	go get -u github.com/gobuffalo/packr/...
 
 dependency:
+	@echo "Installaing dependencies"
 	go get -t ./...
 
 clean:
 	@echo "Cleaning the output directory"
 	rm -rf output
 
-build: $(PACKR) dependency clean
+build: dependency $(PACKR) clean
 ifeq ($(env),prod)
 	@echo "Making Production build"
 	packr
@@ -33,6 +34,7 @@ endif
 run: build
 ifeq ($(env),prod)
 	@echo "Running Production images"
+	mkdir -p data-db
 	docker-compose -f prod-compose.yml up
 else
 	@echo "Running Development images"

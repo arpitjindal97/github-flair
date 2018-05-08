@@ -1,4 +1,4 @@
 *.swp
 secrets/
-flair-images/
+data-db/
 output/

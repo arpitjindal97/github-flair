@@ -15,7 +15,7 @@ func main() {
 
 	_, err := ioutil.ReadDir("/data/flair-images")
 	if err != nil {
-		os.Mkdir("/data/flair-images", 0755)
+		os.MkdirAll("/data/flair-images", 0755)
 	}
 
 	ctab := crontab.New()

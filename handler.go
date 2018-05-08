@@ -114,6 +114,7 @@ func GetFromFolder(username string, theme string) image.Image {
 	defer file.Close()
 
 	if err != nil {
+		log.Println("Error! Image not found in folder, recreating ..")
 		PutInFolder(username)
 		return CreateFlair(username, theme)
 	}
