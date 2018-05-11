@@ -9,6 +9,9 @@ import (
 	"time"
 )
 
+// RefreshImages is called after an interval to
+// - Remove the entries of non-active users
+// - Refreshe the flairs of active users
 func RefreshImages() {
 
 	session, _ := mgo.Dial("mongo")
@@ -30,6 +33,8 @@ func RefreshImages() {
 		os.Remove("images/" + user.Username + ".png.dark")
 
 		hours := time.Now().Sub(user.Timestamp).Hours()
+
+		// remove user non-active for 5 days
 		if hours > 120 {
 
 			collection.Remove(bson.M{"username": user.Username})

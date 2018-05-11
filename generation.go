@@ -21,6 +21,7 @@ import (
 var clean *image.RGBA
 var dark *image.RGBA
 
+// CreateFlair generates the flair fetching the stats from api
 func CreateFlair(username string, theme string) image.Image {
 
 	myimage := image.NewRGBA(image.Rectangle{image.Point{0, 0}, image.Point{250, 90}})
@@ -35,13 +36,13 @@ func CreateFlair(username string, theme string) image.Image {
 		}
 	}
 
-	resp := HttpGet("https://api.github.com/users/" + username)
+	resp := HTTPGet("https://api.github.com/users/" + username)
 
 	body, _ := ioutil.ReadAll(resp.Body)
 	var data map[string]interface{}
 	json.Unmarshal(body, &data)
 
-	resp = HttpGet(fmt.Sprint(data["avatar_url"]) + "")
+	resp = HTTPGet(fmt.Sprint(data["avatar_url"]) + "")
 
 	var avatar image.Image
 	var err error
@@ -98,9 +99,10 @@ func CreateFlair(username string, theme string) image.Image {
 	//jpeg.Encode(w,myimage,&jpeg.Options{Quality:100})
 }
 
+// FillIcon writes the icons to given image template
 func FillIcon(im *image.RGBA, x1, y1 int, url string, theme string) {
 
-	// resp := HttpGet(url)
+	// resp := HTTPGet(url)
 	// avatar, _ := jpeg.Decode(resp.Body)
 
 	box := packr.NewBox("./assets")
@@ -113,16 +115,6 @@ func FillIcon(im *image.RGBA, x1, y1 int, url string, theme string) {
 		for y := y1; y < y1+16; y++ {
 			r, g, b, a := avatar.At(x-x1, y-y1).RGBA()
 
-			/*fmt.Print("{");
-			fmt.Print(uint8(r));
-			fmt.Print(",");
-			fmt.Print(uint8(g));
-			fmt.Print(",");
-			fmt.Print(uint8(b));
-			fmt.Print(",");
-			fmt.Print(uint8(a));
-			fmt.Print("} ");*/
-
 			if uint8(r) == 255 && uint8(g) == 255 && uint8(b) == 255 && uint8(a) == 255 {
 				im.Set(x, y, color.RGBA{238, 238, 238, 255})
 				continue
@@ -133,17 +125,13 @@ func FillIcon(im *image.RGBA, x1, y1 int, url string, theme string) {
 				continue
 			}
 
-			//fmt.Print("  ")
-
-			//if uint8(a) != 0 {
-			//im.Set(x, y, color.RGBA{uint8(r), uint8(b), uint8(g), uint8(a)})
 			im.Set(x, y, avatar.At(x-x1, y-y1))
-			//}
-			//fmt.Print(im.At(x,y));
 		}
 	}
-	//fmt.Println();
 }
+
+// PrepareTemplate is called first and it prepares the
+// blank templates for clean and dark flairs
 func PrepareTemplate() {
 
 	fmt.Println("Preparing Template ...")
@@ -152,20 +140,20 @@ func PrepareTemplate() {
 	clean = image.NewRGBA(image.Rectangle{image.Point{0, 0}, image.Point{250, 90}})
 	dark = image.NewRGBA(image.Rectangle{image.Point{0, 0}, image.Point{250, 90}})
 
-	border_color := color.RGBA{204, 204, 204, 255}
+	borderColor := color.RGBA{204, 204, 204, 255}
 
 	//set the border
 	for x := 0; x < 250; x++ {
-		clean.Set(x, 0, border_color)
-		clean.Set(x, 89, border_color)
-		dark.Set(x, 0, border_color)
-		dark.Set(x, 89, border_color)
+		clean.Set(x, 0, borderColor)
+		clean.Set(x, 89, borderColor)
+		dark.Set(x, 0, borderColor)
+		dark.Set(x, 89, borderColor)
 	}
 	for y := 0; y < 90; y++ {
-		clean.Set(0, y, border_color)
-		clean.Set(249, y, border_color)
-		dark.Set(0, y, border_color)
-		dark.Set(249, y, border_color)
+		clean.Set(0, y, borderColor)
+		clean.Set(249, y, borderColor)
+		dark.Set(0, y, borderColor)
+		dark.Set(249, y, borderColor)
 	}
 
 	//set background
@@ -217,26 +205,29 @@ func PrepareTemplate() {
 
 }
 
+// FetchCounts return the total fork and star count of every
+// repo of the user.
 func FetchCounts(username string) (string, string) {
 
-	resp := HttpGet("https://api.github.com/users/" + username + "/repos")
+	resp := HTTPGet("https://api.github.com/users/" + username + "/repos")
 
 	body, _ := ioutil.ReadAll(resp.Body)
 	var data1 []map[string]interface{}
 	json.Unmarshal(body, &data1)
 
-	fork_count, star_count := 0, 0
+	forkCount, starCount := 0, 0
 	for v := range data1 {
 		temp, _ := strconv.Atoi(fmt.Sprint(data1[v]["forks_count"]))
-		fork_count = fork_count + temp
+		forkCount = forkCount + temp
 
 		temp, _ = strconv.Atoi(fmt.Sprint(data1[v]["stargazers_count"]))
-		star_count = star_count + temp
+		starCount = starCount + temp
 	}
-	return strconv.Itoa(fork_count), strconv.Itoa(star_count)
+	return strconv.Itoa(forkCount), strconv.Itoa(starCount)
 }
 
-func HttpGet(url string) *http.Response {
+// HTTPGet returns the json from url
+func HTTPGet(url string) *http.Response {
 	var resp *http.Response
 
 	box := packr.NewBox("./secrets")
@@ -255,6 +246,8 @@ func HttpGet(url string) *http.Response {
 	return resp
 }
 
+// GetFontFace return an instance of font.Face using the arial
+// font included in the assests folder
 func GetFontFace(filename string, points float64) font.Face {
 
 	box := packr.NewBox("./assets")
