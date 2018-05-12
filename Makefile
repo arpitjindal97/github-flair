@@ -7,6 +7,10 @@ $(PACKR):
 	@echo "Installing packr"
 	go get -u github.com/gobuffalo/packr/...
 
+$(GOLINT):
+	@echo "Installing golint"
+	go get -u github.com/golang/lint
+
 dependency:
 	@echo "Installaing dependencies"
 	go get -t ./...
@@ -15,16 +19,18 @@ clean:
 	@echo "Cleaning the output directory"
 	rm -rf output
 
-build: dependency $(PACKR) clean
+test:
+	golint *.go
+
+build: dependency $(PACKR) $(GOLINT) clean test
+	packr
 ifeq ($(env),prod)
 	@echo "Making Production build"
-	packr
 	GOOS=linux GOARCH=amd64 go build -tags prod -o output/flair-prod-linux-amd64
 	packr clean
 	docker-compose -f prod-compose.yml build
 else
 	@echo "Making Development build"
-	packr
 	GOOS=linux GOARCH=amd64 go build -tags devel -o output/flair-devel-linux-amd64
 	packr clean
 	docker-compose -f devel-compose.yml build
@@ -39,3 +45,5 @@ else
 	@echo "Running Development images"
 	docker-compose -f devel-compose.yml up
 endif
+
+.PHONY: test clean
