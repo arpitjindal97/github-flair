@@ -9,7 +9,7 @@ $(PACKR):
 
 $(GOLINT):
 	@echo "Installing golint"
-	go get -u github.com/golang/lint
+	go get -u golang.org/x/lint/golint
 
 dependency:
 	@echo "Installaing dependencies"
