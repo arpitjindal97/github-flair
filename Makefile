@@ -2,6 +2,7 @@ env ?= devel
 
 
 PACKR := $(GOPATH)/bin/packr
+GOLINT := $(GOPATH)/bin/golint
 
 $(PACKR):
 	@echo "Installing packr"
@@ -21,6 +22,7 @@ clean:
 
 test:
 	golint *.go
+
 
 build: dependency $(PACKR) $(GOLINT) clean test
 	packr
