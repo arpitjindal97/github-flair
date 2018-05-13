@@ -6,6 +6,7 @@ import (
 	"github.com/globalsign/mgo/bson"
 	"image"
 	"image/png"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -113,6 +114,8 @@ func InsertDatabase(username string) {
 	PutInFolder(username)
 }
 
+// CreateFolder creates the folder which will
+// contain the flair images
 func CreateFolder() {
 
 	_, err := ioutil.ReadDir("data-db/flair-images")
