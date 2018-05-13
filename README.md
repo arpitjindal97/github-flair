@@ -1,6 +1,7 @@
 # Github Flair 
 
 [![Build status](https://api.travis-ci.org/arpitjindal97/github-flair.svg?branch=master)](https://travis-ci.org/arpitjindal97/github-flair)
+[![codecov](https://codecov.io/gh/arpitjindal97/github-flair/branch/master/graph/badge.svg)](https://codecov.io/gh/arpitjindal97/github-flair)
 
 It is a profile flair inspired by StackExchange Flair. It reflects few details of your Github account.
 
@@ -12,15 +13,11 @@ alt="profile for Arpit Agarwal on Github, a free distributed version control and
 
 ## Themes
 
-<a href="https://github.com/arpitjindal97">
-<img src="https://ph4nt0m.ml/github/arpitjindal97.png" width="250" height="90"
-alt="profile for Arpit Agarwal on Github, a free distributed version control and source code management website" title="profile for Arpit Agarwal on Github, a free distributed version control and source code management website" /></a>
+![Clean theme](https://ph4nt0m.ml/github/arpitjindal97.png)
 
 <b>Clean Theme</b> *(default)*
 
-<a href="https://github.com/arpitjindal97">
-<img src="https://ph4nt0m.ml/github/arpitjindal97.png?theme=dark" width="250" height="90"
-alt="profile for Arpit Agarwal on Github, a free distributed version control and source code management website" title="profile for Arpit Agarwal on Github, a free distributed version control and source code management website" /></a>
+![Dark theme](https://ph4nt0m.ml/github/arpitjindal97.png?theme=dark)
 
 <b>Dark Theme</b> 
 

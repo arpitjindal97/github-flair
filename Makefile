@@ -21,6 +21,7 @@ clean:
 
 build: dependency $(PACKR) $(GOLINT) clean
 	golint .
+	go vet
 	packr
 ifeq ($(env),prod)
 	@echo "Making Production build"
