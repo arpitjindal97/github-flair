@@ -152,7 +152,7 @@ func FillIcon(im *image.RGBA, x1, y1 int, url string, theme string, errPointer *
 
 // PrepareTemplate is called first and it prepares the
 // blank templates for clean and dark flairs
-func PrepareTemplate() error {
+func PrepareTemplate() {
 
 	fmt.Println("Preparing Template ...")
 
@@ -211,11 +211,10 @@ func PrepareTemplate() error {
 	FillIcon(dark, 173, 28, "star_dark.jpeg", "dark", &err)
 
 	if err != nil {
-		return err
+		panic(err)
 	}
 
 	fmt.Println("Done")
-	return nil
 }
 
 // FetchCounts return the total fork and star count of every

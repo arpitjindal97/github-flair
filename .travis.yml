@@ -15,7 +15,7 @@ script:
     - make build env=devel
     - docker run -d -p 27017:27017 mongo
     - packr
-    - go test -v -race -tags devel -coverprofile=coverage.txt -covermode=atomic
+    - go test -v -race -coverprofile=coverage.txt -covermode=atomic
     - packr clean
 
 after_success:

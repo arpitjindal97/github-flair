@@ -2,26 +2,36 @@ package main
 
 import (
 	"io/ioutil"
-	"net/http/httptest"
+	"log"
+	"net/http"
 	"os"
 	"testing"
+	"time"
 )
 
 // TestCreateFlair tests if flair is there is any error
 // while creating the flair
 func TestCreateFlair(t *testing.T) {
 
-	err := PrepareTemplate()
-	if err != nil {
-		t.Error(err)
-	}
+	go func() {
+		main()
+	}()
 
-	RequestFlair("http://example.com/github/arpitjindal97.png", t)
-	RequestFlair("http://example.com/github/arpitjindal97.png?theme=dark", t)
+	time.Sleep(time.Second * 2)
 
+	log.Println("Requesting arpitjindal97 clean flair")
+	RequestFlair("http://localhost:8080/github/arpitjindal97.png", t)
+
+	log.Println("Requesting arpitjindal97 dark flair")
+	RequestFlair("http://localhost:8080/github/arpitjindal97.png?theme=dark", t)
+
+	log.Println("Removing folder")
 	DeleteFolder()
-	RequestFlair("http://example.com/github/arpitjindal97.png", t)
 
+	log.Println("Requesting arpitjindal97 clean flair")
+	RequestFlair("http://localhost:8080/github/arpitjindal97.png", t)
+
+	log.Println("Refreshing the images")
 	RefreshImages()
 
 }
@@ -29,11 +39,8 @@ func TestCreateFlair(t *testing.T) {
 // RequestFlair request the flair from handler
 func RequestFlair(url string, t *testing.T) {
 
-	req := httptest.NewRequest("GET", url, nil)
-	w := httptest.NewRecorder()
-	Flair(w, req)
+	resp, _ := http.Get(url)
 
-	resp := w.Result()
 	header := resp.Header.Get("Content-Type")
 
 	if header != "image/png" {

@@ -45,7 +45,7 @@ func RefreshImages() {
 			defer file.Close()
 
 			file1, _ := os.Create("data-db/flair-images/" + user.Username + ".png.dark")
-			img, _ = CreateFlair(user.Username, "clean")
+			img, _ = CreateFlair(user.Username, "dark")
 			png.Encode(file1, img)
 
 			defer file1.Close()
