@@ -4,9 +4,7 @@ package main
 
 import (
 	"github.com/mileusna/crontab"
-	"io/ioutil"
 	"net/http"
-	"os"
 )
 
 func main() {
