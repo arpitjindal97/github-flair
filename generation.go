@@ -115,23 +115,21 @@ func CreateFlair(username string, theme string) (image.Image, error) {
 }
 
 // FillIcon writes the icons to given image template
-func FillIcon(im *image.RGBA, x1, y1 int, url string, theme string) error {
+func FillIcon(im *image.RGBA, x1, y1 int, url string, theme string, errPointer *error) {
 
 	var body []byte
 	var err error
 
 	box := packr.NewBox("./assets")
-	body, err = box.MustBytes(url)
-
-	if err != nil {
-		return err
-	}
+	body, _ = box.MustBytes(url)
 
 	avatar, err := jpeg.Decode(bytes.NewReader(body))
 
-	if err != nil {
-		return err
+	if err != nil && errPointer == nil {
+		errPointer = err
+		return
 	}
+
 	avatar = resize.Resize(16, 16, avatar, resize.NearestNeighbor)
 	for x := x1; x < x1+16; x++ {
 		for y := y1; y < y1+16; y++ {
@@ -150,7 +148,6 @@ func FillIcon(im *image.RGBA, x1, y1 int, url string, theme string) error {
 			im.Set(x, y, avatar.At(x-x1, y-y1))
 		}
 	}
-	return nil
 }
 
 // PrepareTemplate is called first and it prepares the
@@ -187,60 +184,36 @@ func PrepareTemplate() error {
 		}
 	}
 
+	var err error
+
 	//set the github icon
-	err := FillIcon(clean, 97, 7, "github.jpeg", "")
-	if err != nil {
-		return err
-	}
-	err = FillIcon(dark, 97, 7, "github_dark.jpeg", "dark")
-	if err != nil {
-		return err
-	}
+	FillIcon(clean, 97, 7, "github.jpeg", "", &err)
+	FillIcon(dark, 97, 7, "github_dark.jpeg", "dark", &err)
+
 	//set repo icon
-	err = FillIcon(clean, 97, 28, "repo.jpeg", "")
-	if err != nil {
-		return err
-	}
-	err = FillIcon(dark, 97, 28, "repo_dark.jpeg", "dark")
-	if err != nil {
-		return err
-	}
+	FillIcon(clean, 97, 28, "repo.jpeg", "", &err)
+	FillIcon(dark, 97, 28, "repo_dark.jpeg", "dark", &err)
+
 	//set followers icon
-	err = FillIcon(clean, 97, 48, "people.jpeg", "")
-	if err != nil {
-		return err
-	}
-	err = FillIcon(dark, 97, 48, "people_dark.jpeg", "dark")
-	if err != nil {
-		return err
-	}
+	FillIcon(clean, 97, 48, "people.jpeg", "", &err)
+	FillIcon(dark, 97, 48, "people_dark.jpeg", "dark", &err)
+
 	//set fork icon
-	err = FillIcon(clean, 97, 68, "fork.jpeg", "")
-	if err != nil {
-		return err
-	}
-	err = FillIcon(dark, 97, 68, "fork_dark.jpeg", "dark")
-	if err != nil {
-		return err
-	}
+	FillIcon(clean, 97, 68, "fork.jpeg", "", &err)
+	FillIcon(dark, 97, 68, "fork_dark.jpeg", "dark", &err)
+
 	//set gist icon
-	err = FillIcon(clean, 173, 48, "gist.jpeg", "")
-	if err != nil {
-		return err
-	}
-	err = FillIcon(dark, 173, 48, "gist_dark.jpeg", "dark")
-	if err != nil {
-		return err
-	}
+	FillIcon(clean, 173, 48, "gist.jpeg", "", &err)
+	FillIcon(dark, 173, 48, "gist_dark.jpeg", "dark", &err)
+
 	//set star icon
-	err = FillIcon(clean, 173, 28, "star.jpeg", "")
+	FillIcon(clean, 173, 28, "star.jpeg", "", &err)
+	FillIcon(dark, 173, 28, "star_dark.jpeg", "dark", &err)
+
 	if err != nil {
 		return err
 	}
-	err = FillIcon(dark, 173, 28, "star_dark.jpeg", "dark")
-	if err != nil {
-		return err
-	}
+
 	fmt.Println("Done")
 	return nil
 }
