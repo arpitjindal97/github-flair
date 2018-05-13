@@ -13,10 +13,7 @@ func main() {
 
 	PrepareTemplate()
 
-	_, err := ioutil.ReadDir("data-db/flair-images")
-	if err != nil {
-		os.MkdirAll("data-db/flair-images", 0755)
-	}
+	CreateFolder()
 
 	ctab := crontab.New()
 	ctab.AddJob("10 23 * * *", RefreshImages)

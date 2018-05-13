@@ -113,10 +113,19 @@ func InsertDatabase(username string) {
 	PutInFolder(username)
 }
 
+func CreateFolder() {
+
+	_, err := ioutil.ReadDir("data-db/flair-images")
+	if err != nil {
+		os.Mkdir("data-db/flair-images", 0755)
+	}
+}
+
 // PutInFolder generates the image and puts it
 // in the folder
 func PutInFolder(username string) error {
 
+	CreateFolder()
 	file, _ := os.Create("data-db/flair-images/" + username + ".png.clean")
 
 	img, err := CreateFlair(username, "clean")

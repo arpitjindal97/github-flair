@@ -15,9 +15,20 @@ func TestCreateFlair(t *testing.T) {
 		t.Error(err)
 	}
 
-	// BothTheme("arpitjindal97", t)
-	// BothTheme("narkoz", t)
-	req := httptest.NewRequest("GET", "http://example.com/github/arpitjindal97.png", nil)
+	RequestFlair("http://example.com/github/arpitjindal97.png", t)
+	RequestFlair("http://example.com/github/arpitjindal97.png?theme=dark", t)
+
+	DeleteFolder()
+	RequestFlair("http://example.com/github/arpitjindal97.png", t)
+
+	RefreshImages()
+
+}
+
+// RequestFlair request the flair from handler
+func RequestFlair(url string, t *testing.T) {
+
+	req := httptest.NewRequest("GET", url, nil)
 	w := httptest.NewRecorder()
 	Flair(w, req)
 
@@ -28,20 +39,10 @@ func TestCreateFlair(t *testing.T) {
 		body, _ := ioutil.ReadAll(resp.Body)
 		t.Error(body)
 	}
-	RefreshImages()
-
 }
 
-// BothTheme tests both themes of given username
-// saves me few lines of code
-func BothTheme(username string, t *testing.T) {
-	_, err := CreateFlair(username, "clean")
-	if err != nil {
-		t.Error(err)
-	}
-
-	_, err = CreateFlair(username, "dark")
-	if err != nil {
-		t.Error(err)
-	}
+// DeleteFolder deletes the folder containing
+// all the flair images
+func DeleteFolder() {
+	os.RemoveAll("data-db")
 }
