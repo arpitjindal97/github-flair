@@ -126,7 +126,7 @@ func FillIcon(im *image.RGBA, x1, y1 int, url string, theme string, errPointer *
 	avatar, err := jpeg.Decode(bytes.NewReader(body))
 
 	if err != nil && errPointer == nil {
-		errPointer = err
+		errPointer = &err
 		return
 	}
 
