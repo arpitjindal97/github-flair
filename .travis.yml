@@ -12,9 +12,9 @@ before_script:
     - mkdir secrets
 
 script:
+    - make build env=devel
     - go vet
     - go test -v -race -coverprofile=coverage.txt -covermode=atomic
-    - make build env=devel
 
 after_success:
     - bash <(curl -s https://codecov.io/bash)
