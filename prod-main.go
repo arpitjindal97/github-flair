@@ -1,4 +1,4 @@
-// +build !devel
+// +build prod
 
 package main
 
@@ -16,9 +16,9 @@ func main() {
 
 	PrepareTemplate()
 
-	_, err := ioutil.ReadDir("/data/flair-images")
+	_, err := ioutil.ReadDir("data-db/flair-images")
 	if err != nil {
-		os.Mkdir("/data/flair-images", 0755)
+		os.Mkdir("data-db/flair-images", 0755)
 	}
 
 	ctab := crontab.New()

@@ -14,7 +14,7 @@ import (
 // - Refreshe the flairs of active users
 func RefreshImages() {
 
-	session, _ := mgo.Dial("mongo")
+	session, _ := mgo.Dial("localhost")
 	defer session.Close()
 
 	collection := session.DB("flair").C("github")
@@ -25,12 +25,10 @@ func RefreshImages() {
 
 	iter.All(&result)
 
-	PrepareTemplate()
-
 	for _, user := range result {
 
-		os.Remove("images/" + user.Username + ".png.clean")
-		os.Remove("images/" + user.Username + ".png.dark")
+		os.Remove("data-db/flair-images/" + user.Username + ".png.clean")
+		os.Remove("data-db/flair-images/" + user.Username + ".png.dark")
 
 		hours := time.Now().Sub(user.Timestamp).Hours()
 
@@ -41,12 +39,12 @@ func RefreshImages() {
 
 		} else {
 
-			file, _ := os.Create("images/" + user.Username + ".png.clean")
+			file, _ := os.Create("data-db/flair-images/" + user.Username + ".png.clean")
 			img, _ := CreateFlair(user.Username, "clean")
 			png.Encode(file, img)
 			defer file.Close()
 
-			file1, _ := os.Create("images/" + user.Username + ".png.dark")
+			file1, _ := os.Create("data-db/flair-images/" + user.Username + ".png.dark")
 			img, _ = CreateFlair(user.Username, "clean")
 			png.Encode(file1, img)
 

@@ -20,7 +20,6 @@ import (
 
 var clean *image.RGBA
 var dark *image.RGBA
-var testingBit = false
 
 // CreateFlair generates the flair fetching the stats from api
 func CreateFlair(username string, theme string) (image.Image, error) {
@@ -121,12 +120,8 @@ func FillIcon(im *image.RGBA, x1, y1 int, url string, theme string) error {
 	var body []byte
 	var err error
 
-	if testingBit == true {
-		body, err = ioutil.ReadFile("assets/" + url)
-	} else {
-		box := packr.NewBox("./assets")
-		body, err = box.MustBytes(url)
-	}
+	box := packr.NewBox("./assets")
+	body, err = box.MustBytes(url)
 
 	if err != nil {
 		return err

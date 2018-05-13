@@ -39,14 +39,13 @@ func Flair(w http.ResponseWriter, r *http.Request) {
 	if ExistsInDatabase(username) == true {
 		myimage, err = GetFromFolder(username, theme)
 		if err != nil {
-			w.Write([]byte("Error while generating flair"))
+			w.Header().Set("Content-Type", "text/html")
+			w.Header().Set("Content-Length", strconv.Itoa(len(err.Error())))
+			w.Write([]byte(err.Error()))
 		}
 		UpdateDatabase(username)
 	} else {
-		myimage, err = CreateFlair(username, theme)
-		if err != nil {
-			w.Write([]byte("Error while generating flair"))
-		}
+		myimage, _ = CreateFlair(username, theme)
 		InsertDatabase(username)
 	}
 
@@ -67,7 +66,7 @@ type User struct {
 // in Database or not
 func ExistsInDatabase(username string) bool {
 
-	session, _ := mgo.Dial("mongo")
+	session, _ := mgo.Dial("localhost")
 	defer session.Close()
 
 	collection := session.DB("flair").C("github")
@@ -86,7 +85,7 @@ func ExistsInDatabase(username string) bool {
 // updated timestamp
 func UpdateDatabase(username string) {
 
-	session, _ := mgo.Dial("mongo")
+	session, _ := mgo.Dial("localhost")
 	defer session.Close()
 
 	collection := session.DB("flair").C("github")
@@ -102,7 +101,7 @@ func UpdateDatabase(username string) {
 // Database with current timestamp
 func InsertDatabase(username string) {
 
-	session, _ := mgo.Dial("mongo")
+	session, _ := mgo.Dial("localhost")
 	defer session.Close()
 
 	collection := session.DB("flair").C("github")
@@ -118,7 +117,7 @@ func InsertDatabase(username string) {
 // in the folder
 func PutInFolder(username string) error {
 
-	file, _ := os.Create("/data/flair-images/" + username + ".png.clean")
+	file, _ := os.Create("data-db/flair-images/" + username + ".png.clean")
 
 	img, err := CreateFlair(username, "clean")
 	if err != nil {
@@ -128,7 +127,7 @@ func PutInFolder(username string) error {
 
 	file.Close()
 
-	file, _ = os.Create("/data/flair-images/" + username + ".png.dark")
+	file, _ = os.Create("data-db/flair-images/" + username + ".png.dark")
 
 	img, err = CreateFlair(username, "dark")
 	if err != nil {
@@ -144,7 +143,7 @@ func PutInFolder(username string) error {
 // it will put the image also if not found
 func GetFromFolder(username string, theme string) (image.Image, error) {
 
-	file, err := os.Open("/data/flair-images/" + username + ".png." + theme)
+	file, err := os.Open("data-db/flair-images/" + username + ".png." + theme)
 
 	defer file.Close()
 

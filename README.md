@@ -13,11 +13,11 @@ alt="profile for Arpit Agarwal on Github, a free distributed version control and
 
 ## Themes
 
-![Clean theme](https://ph4nt0m.ml/github/arpitjindal97.png)
+[![Clean theme](https://ph4nt0m.ml/github/arpitjindal97.png)](https://ph4nt0m.ml/github/arpitjindal97.png)
 
 <b>Clean Theme</b> *(default)*
 
-![Dark theme](https://ph4nt0m.ml/github/arpitjindal97.png?theme=dark)
+[![Dark theme](https://ph4nt0m.ml/github/arpitjindal97.png?theme=dark)](https://ph4nt0m.ml/github/arpitjindal97.png?theme=dark)
 
 <b>Dark Theme</b> 
 
