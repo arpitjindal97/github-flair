@@ -1,6 +1,6 @@
 # Github Flair 
 
-![build passing](https://api.travis-ci.org/arpitjindal97/github-flair.svg?branch=master)
+[![Build status](https://api.travis-ci.org/arpitjindal97/github-flair.svg?branch=master)](https://travis-ci.org/arpitjindal97/github-flair)
 
 It is a profile flair inspired by StackExchange Flair. It reflects few details of your Github account.
 

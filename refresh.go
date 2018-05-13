@@ -42,11 +42,13 @@ func RefreshImages() {
 		} else {
 
 			file, _ := os.Create("images/" + user.Username + ".png.clean")
-			png.Encode(file, CreateFlair(user.Username, "clean"))
+			img, _ := CreateFlair(user.Username, "clean")
+			png.Encode(file, img)
 			defer file.Close()
 
 			file1, _ := os.Create("images/" + user.Username + ".png.dark")
-			png.Encode(file1, CreateFlair(user.Username, "dark"))
+			img, _ = CreateFlair(user.Username, "clean")
+			png.Encode(file1, img)
 
 			defer file1.Close()
 		}

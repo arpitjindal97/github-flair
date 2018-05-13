@@ -20,9 +20,10 @@ import (
 
 var clean *image.RGBA
 var dark *image.RGBA
+var testingBit = false
 
 // CreateFlair generates the flair fetching the stats from api
-func CreateFlair(username string, theme string) image.Image {
+func CreateFlair(username string, theme string) (image.Image, error) {
 
 	myimage := image.NewRGBA(image.Rectangle{image.Point{0, 0}, image.Point{250, 90}})
 
@@ -36,16 +37,28 @@ func CreateFlair(username string, theme string) image.Image {
 		}
 	}
 
-	resp := HTTPGet("https://api.github.com/users/" + username)
+	resp, err := HTTPGet("https://api.github.com/users/" + username)
 
-	body, _ := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	body, err := ioutil.ReadAll(resp.Body)
+
+	if err != nil {
+		return nil, err
+	}
+
 	var data map[string]interface{}
 	json.Unmarshal(body, &data)
 
-	resp = HTTPGet(fmt.Sprint(data["avatar_url"]) + "")
+	resp, err = HTTPGet(fmt.Sprint(data["avatar_url"]) + "")
+
+	if err != nil {
+		return nil, err
+	}
 
 	var avatar image.Image
-	var err error
 
 	if resp.Header.Get("content-type") == "image/png" {
 		avatar, err = png.Decode(resp.Body)
@@ -55,7 +68,7 @@ func CreateFlair(username string, theme string) image.Image {
 	defer resp.Body.Close()
 
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
 	avatar = resize.Resize(80, 80, avatar, resize.NearestNeighbor)
@@ -90,26 +103,40 @@ func CreateFlair(username string, theme string) image.Image {
 	dc.DrawStringAnchored(fmt.Sprint(data["followers"]), 122, 13+47, 0, 0)
 	dc.DrawStringAnchored(fmt.Sprint(data["public_gists"]), 196, 13+47, 0, 0)
 	//fork count and star count
-	forks, stars := FetchCounts(username)
+	forks, stars, err := FetchCounts(username)
+	if err != nil {
+		return nil, err
+	}
 	dc.DrawStringAnchored(forks, 122, 13+67, 0, 0)
 	dc.DrawStringAnchored(stars, 196, 13+27, 0, 0)
 
-	return myimage
+	return myimage, nil
 
 	//jpeg.Encode(w,myimage,&jpeg.Options{Quality:100})
 }
 
 // FillIcon writes the icons to given image template
-func FillIcon(im *image.RGBA, x1, y1 int, url string, theme string) {
+func FillIcon(im *image.RGBA, x1, y1 int, url string, theme string) error {
 
-	// resp := HTTPGet(url)
-	// avatar, _ := jpeg.Decode(resp.Body)
+	var body []byte
+	var err error
 
-	box := packr.NewBox("./assets")
+	if testingBit == true {
+		body, err = ioutil.ReadFile("assets/" + url)
+	} else {
+		box := packr.NewBox("./assets")
+		body, err = box.MustBytes(url)
+	}
 
-	body, _ := box.MustBytes(url)
-	avatar, _ := jpeg.Decode(bytes.NewReader(body))
+	if err != nil {
+		return err
+	}
 
+	avatar, err := jpeg.Decode(bytes.NewReader(body))
+
+	if err != nil {
+		return err
+	}
 	avatar = resize.Resize(16, 16, avatar, resize.NearestNeighbor)
 	for x := x1; x < x1+16; x++ {
 		for y := y1; y < y1+16; y++ {
@@ -128,11 +155,12 @@ func FillIcon(im *image.RGBA, x1, y1 int, url string, theme string) {
 			im.Set(x, y, avatar.At(x-x1, y-y1))
 		}
 	}
+	return nil
 }
 
 // PrepareTemplate is called first and it prepares the
 // blank templates for clean and dark flairs
-func PrepareTemplate() {
+func PrepareTemplate() error {
 
 	fmt.Println("Preparing Template ...")
 
@@ -163,53 +191,74 @@ func PrepareTemplate() {
 			dark.Set(x, y, color.RGBA{34, 34, 34, 255})
 		}
 	}
-	// var resp *http.Response
-
-	/*img,_ := os.Open("images/github_dark.jpeg")
-	avatar, _,_ := image.Decode(img)*/
 
 	//set the github icon
-	FillIcon(clean, 97, 7, "github.jpeg", "")
-	FillIcon(dark, 97, 7, "github_dark.jpeg", "dark")
-
+	err := FillIcon(clean, 97, 7, "github.jpeg", "")
+	if err != nil {
+		return err
+	}
+	err = FillIcon(dark, 97, 7, "github_dark.jpeg", "dark")
+	if err != nil {
+		return err
+	}
 	//set repo icon
-	FillIcon(clean, 97, 28, "repo.jpeg", "")
-	FillIcon(dark, 97, 28, "repo_dark.jpeg", "dark")
-
+	err = FillIcon(clean, 97, 28, "repo.jpeg", "")
+	if err != nil {
+		return err
+	}
+	err = FillIcon(dark, 97, 28, "repo_dark.jpeg", "dark")
+	if err != nil {
+		return err
+	}
 	//set followers icon
-	FillIcon(clean, 97, 48, "people.jpeg", "")
-	FillIcon(dark, 97, 48, "people_dark.jpeg", "dark")
-
+	err = FillIcon(clean, 97, 48, "people.jpeg", "")
+	if err != nil {
+		return err
+	}
+	err = FillIcon(dark, 97, 48, "people_dark.jpeg", "dark")
+	if err != nil {
+		return err
+	}
 	//set fork icon
-	FillIcon(clean, 97, 68, "fork.jpeg", "")
-	FillIcon(dark, 97, 68, "fork_dark.jpeg", "dark")
-
+	err = FillIcon(clean, 97, 68, "fork.jpeg", "")
+	if err != nil {
+		return err
+	}
+	err = FillIcon(dark, 97, 68, "fork_dark.jpeg", "dark")
+	if err != nil {
+		return err
+	}
 	//set gist icon
-	FillIcon(clean, 173, 48, "gist.jpeg", "")
-	FillIcon(dark, 173, 48, "gist_dark.jpeg", "dark")
-
+	err = FillIcon(clean, 173, 48, "gist.jpeg", "")
+	if err != nil {
+		return err
+	}
+	err = FillIcon(dark, 173, 48, "gist_dark.jpeg", "dark")
+	if err != nil {
+		return err
+	}
 	//set star icon
-	FillIcon(clean, 173, 28, "star.jpeg", "")
-	FillIcon(dark, 173, 28, "star_dark.jpeg", "dark")
-
-	// url := "http://cdn.steelhousemedia.com/files/docs/Creative/fonts/All%20Fonts/Arial%20Bold.ttf"
-	// filename := "arialbd.ttf"
-	// resp, _ = http.Get(url)
-
-	// file, _ := os.Create(filename)
-	// defer file.Close()
-
-	// io.Copy(file, resp.Body)
-
+	err = FillIcon(clean, 173, 28, "star.jpeg", "")
+	if err != nil {
+		return err
+	}
+	err = FillIcon(dark, 173, 28, "star_dark.jpeg", "dark")
+	if err != nil {
+		return err
+	}
 	fmt.Println("Done")
-
+	return nil
 }
 
 // FetchCounts return the total fork and star count of every
 // repo of the user.
-func FetchCounts(username string) (string, string) {
+func FetchCounts(username string) (string, string, error) {
 
-	resp := HTTPGet("https://api.github.com/users/" + username + "/repos")
+	resp, err := HTTPGet("https://api.github.com/users/" + username + "/repos")
+
+	if err != nil {
+		return "", "", err
+	}
 
 	body, _ := ioutil.ReadAll(resp.Body)
 	var data1 []map[string]interface{}
@@ -223,11 +272,11 @@ func FetchCounts(username string) (string, string) {
 		temp, _ = strconv.Atoi(fmt.Sprint(data1[v]["stargazers_count"]))
 		starCount = starCount + temp
 	}
-	return strconv.Itoa(forkCount), strconv.Itoa(starCount)
+	return strconv.Itoa(forkCount), strconv.Itoa(starCount), nil
 }
 
 // HTTPGet returns the json from url
-func HTTPGet(url string) *http.Response {
+func HTTPGet(url string) (*http.Response, error) {
 	var resp *http.Response
 
 	box := packr.NewBox("./secrets")
@@ -236,14 +285,13 @@ func HTTPGet(url string) *http.Response {
 
 	if err == nil {
 		url = url + "?access_token=" + body[:len(body)-1]
-
 	}
 
 	resp, err = http.Get(url)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
-	return resp
+	return resp, nil
 }
 
 // GetFontFace return an instance of font.Face using the arial
@@ -261,8 +309,6 @@ func GetFontFace(filename string, points float64) font.Face {
 	f, err := truetype.Parse(fontBytes)
 	if err != nil {
 		panic(err)
-		return nil
-
 	}
 	face := truetype.NewFace(f, &truetype.Options{
 		Size: points,

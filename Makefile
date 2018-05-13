@@ -1,6 +1,5 @@
 env ?= devel
 
-
 PACKR := $(GOPATH)/bin/packr
 GOLINT := $(GOPATH)/bin/golint
 
@@ -20,11 +19,8 @@ clean:
 	@echo "Cleaning the output directory"
 	rm -rf output
 
-test:
-	golint *.go
-
-
-build: dependency $(PACKR) $(GOLINT) clean test
+build: dependency $(PACKR) $(GOLINT) clean
+	golint .
 	packr
 ifeq ($(env),prod)
 	@echo "Making Production build"

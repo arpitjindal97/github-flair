@@ -1,10 +1,20 @@
 language: go
+
 services:
     - docker
+
 go:
-    - master
+    - 1.10
+    - 1.9
+
 before_script:
     - env | sort
     - mkdir secrets
+
 script:
+    - go vet
+    - go test -v -race -coverprofile=coverage.txt -covermode=atomic
     - make build env=devel
+
+after_success:
+    - bash <(curl -s https://codecov.io/bash)

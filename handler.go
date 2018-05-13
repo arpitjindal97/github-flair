@@ -34,12 +34,19 @@ func Flair(w http.ResponseWriter, r *http.Request) {
 	log.Println(username)
 
 	var myimage image.Image
+	var err error
 
 	if ExistsInDatabase(username) == true {
-		myimage = GetFromFolder(username, theme)
+		myimage, err = GetFromFolder(username, theme)
+		if err != nil {
+			w.Write([]byte("Error while generating flair"))
+		}
 		UpdateDatabase(username)
 	} else {
-		myimage = CreateFlair(username, theme)
+		myimage, err = CreateFlair(username, theme)
+		if err != nil {
+			w.Write([]byte("Error while generating flair"))
+		}
 		InsertDatabase(username)
 	}
 
@@ -109,24 +116,33 @@ func InsertDatabase(username string) {
 
 // PutInFolder generates the image and puts it
 // in the folder
-func PutInFolder(username string) {
+func PutInFolder(username string) error {
 
 	file, _ := os.Create("/data/flair-images/" + username + ".png.clean")
 
-	png.Encode(file, CreateFlair(username, "clean"))
+	img, err := CreateFlair(username, "clean")
+	if err != nil {
+		return err
+	}
+	png.Encode(file, img)
 
 	file.Close()
 
 	file, _ = os.Create("/data/flair-images/" + username + ".png.dark")
 
-	png.Encode(file, CreateFlair(username, "dark"))
+	img, err = CreateFlair(username, "dark")
+	if err != nil {
+		return err
+	}
+	png.Encode(file, img)
 
 	defer file.Close()
+	return nil
 }
 
 // GetFromFolder fetches the image from folder
 // it will put the image also if not found
-func GetFromFolder(username string, theme string) image.Image {
+func GetFromFolder(username string, theme string) (image.Image, error) {
 
 	file, err := os.Open("/data/flair-images/" + username + ".png." + theme)
 
@@ -137,7 +153,7 @@ func GetFromFolder(username string, theme string) image.Image {
 		PutInFolder(username)
 		return CreateFlair(username, theme)
 	}
-	image, _ := png.Decode(file)
+	image, err := png.Decode(file)
 
-	return image
+	return image, err
 }
