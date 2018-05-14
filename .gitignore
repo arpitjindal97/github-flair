@@ -3,3 +3,4 @@ secrets/
 data-db/
 output/
 coverage.txt
+profile.out
