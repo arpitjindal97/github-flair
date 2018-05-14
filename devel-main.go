@@ -7,11 +7,15 @@ import (
 	"net/http"
 )
 
+var databaseUrl = "mongo"
+
 func main() {
 
 	PrepareTemplate()
 
-	CreateFolder()
+	DialConnection(databaseUrl)
+
+	defer CloseConnection()
 
 	ctab := crontab.New()
 	ctab.AddJob("10 23 * * *", RefreshImages)

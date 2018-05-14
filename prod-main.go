@@ -15,7 +15,9 @@ func main() {
 
 	PrepareTemplate()
 
-	CreateFolder()
+	DialConnection("mongo")
+
+	defer CloseConnection()
 
 	ctab := crontab.New()
 	ctab.AddJob("10 23 * * *", RefreshImages)
