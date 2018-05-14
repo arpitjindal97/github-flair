@@ -67,8 +67,3 @@ func UpdateUser(user User) {
 func RemoveUser(user User) {
 	collection.Remove(bson.M{"username": user.Username})
 }
-
-// CloseConnection will close the DB session
-func CloseConnection() {
-	session.Close()
-}

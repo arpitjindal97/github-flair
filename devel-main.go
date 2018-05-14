@@ -15,7 +15,7 @@ func main() {
 
 	DialConnection(databaseUrl)
 
-	defer CloseConnection()
+	defer session.Close()
 
 	ctab := crontab.New()
 	ctab.AddJob("10 23 * * *", RefreshImages)
