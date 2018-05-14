@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/fogleman/gg"
 	"github.com/gobuffalo/packr"
@@ -36,28 +37,17 @@ func CreateFlair(username string, theme string) (image.Image, error) {
 		}
 	}
 
-	resp, err := HTTPGet("https://api.github.com/users/" + username)
+	resp := APIHTTPGet("https://api.github.com/users/" + username)
 
-	if err != nil {
-		return nil, err
-	}
-
-	body, err := ioutil.ReadAll(resp.Body)
-
-	if err != nil {
-		return nil, err
-	}
+	body, _ := ioutil.ReadAll(resp.Body)
 
 	var data map[string]interface{}
 	json.Unmarshal(body, &data)
 
-	resp, err = HTTPGet(fmt.Sprint(data["avatar_url"]) + "")
-
-	if err != nil {
-		return nil, err
-	}
+	resp = APIHTTPGet(fmt.Sprint(data["avatar_url"]) + "")
 
 	var avatar image.Image
+	var err error
 
 	if resp.Header.Get("content-type") == "image/png" {
 		avatar, err = png.Decode(resp.Body)
@@ -67,7 +57,7 @@ func CreateFlair(username string, theme string) (image.Image, error) {
 	defer resp.Body.Close()
 
 	if err != nil {
-		return nil, err
+		return nil, errors.New("Error decoding image")
 	}
 
 	avatar = resize.Resize(80, 80, avatar, resize.NearestNeighbor)
@@ -102,10 +92,8 @@ func CreateFlair(username string, theme string) (image.Image, error) {
 	dc.DrawStringAnchored(fmt.Sprint(data["followers"]), 122, 13+47, 0, 0)
 	dc.DrawStringAnchored(fmt.Sprint(data["public_gists"]), 196, 13+47, 0, 0)
 	//fork count and star count
-	forks, stars, err := FetchCounts(username)
-	if err != nil {
-		return nil, err
-	}
+	forks, stars := FetchCounts(username)
+
 	dc.DrawStringAnchored(forks, 122, 13+67, 0, 0)
 	dc.DrawStringAnchored(stars, 196, 13+27, 0, 0)
 
@@ -219,13 +207,9 @@ func PrepareTemplate() {
 
 // FetchCounts return the total fork and star count of every
 // repo of the user.
-func FetchCounts(username string) (string, string, error) {
+func FetchCounts(username string) (string, string) {
 
-	resp, err := HTTPGet("https://api.github.com/users/" + username + "/repos")
-
-	if err != nil {
-		return "", "", err
-	}
+	resp := APIHTTPGet("https://api.github.com/users/" + username + "/repos")
 
 	body, _ := ioutil.ReadAll(resp.Body)
 	var data1 []map[string]interface{}
@@ -239,11 +223,11 @@ func FetchCounts(username string) (string, string, error) {
 		temp, _ = strconv.Atoi(fmt.Sprint(data1[v]["stargazers_count"]))
 		starCount = starCount + temp
 	}
-	return strconv.Itoa(forkCount), strconv.Itoa(starCount), nil
+	return strconv.Itoa(forkCount), strconv.Itoa(starCount)
 }
 
-// HTTPGet returns the json from url
-func HTTPGet(url string) (*http.Response, error) {
+// APIHTTPGet returns the json from url
+func APIHTTPGet(url string) *http.Response {
 	var resp *http.Response
 
 	box := packr.NewBox("./secrets")
@@ -256,9 +240,9 @@ func HTTPGet(url string) (*http.Response, error) {
 
 	resp, err = http.Get(url)
 	if err != nil {
-		return nil, err
+		panic(err)
 	}
-	return resp, nil
+	return resp
 }
 
 // GetFontFace return an instance of font.Face using the arial
@@ -267,16 +251,10 @@ func GetFontFace(filename string, points float64) font.Face {
 
 	box := packr.NewBox("./assets")
 
-	fontBytes, err := box.MustBytes(filename)
+	fontBytes, _ := box.MustBytes(filename)
 
-	if err != nil {
-		panic(err)
-	}
+	f, _ := truetype.Parse(fontBytes)
 
-	f, err := truetype.Parse(fontBytes)
-	if err != nil {
-		panic(err)
-	}
 	face := truetype.NewFace(f, &truetype.Options{
 		Size: points,
 		// Hinting: font.HintingFull,
