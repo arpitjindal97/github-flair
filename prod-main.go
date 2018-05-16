@@ -17,7 +17,7 @@ func main() {
 
 	DialConnection("mongo")
 
-	defer CloseConnection()
+	defer session.Close()
 
 	ctab := crontab.New()
 	ctab.AddJob("10 23 * * *", RefreshImages)
@@ -47,7 +47,5 @@ func main() {
 	}
 
 	server.ListenAndServeTLS("", "")
-
-	// http.ListenAndServe(":8080", nil)
 
 }

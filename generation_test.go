@@ -22,8 +22,8 @@ func TestCreateFlair(t *testing.T) {
 	log.Println("Requesting arpitjindal97 clean flair")
 	RequestFlair("http://localhost:8080/github/arpitjindal97.png", t)
 
-	log.Println("Requesting arpitjindal97 dark flair")
-	RequestFlair("http://localhost:8080/github/arpitjindal97.png?theme=dark", t)
+	log.Println("Requesting narkoz dark flair for png image")
+	RequestFlair("http://localhost:8080/github/narkoz.png?theme=dark", t)
 
 	log.Println("Refreshing the images")
 	RefreshImages()
