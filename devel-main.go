@@ -7,13 +7,13 @@ import (
 	"net/http"
 )
 
-var databaseUrl = "mongo"
+var databaseURL = "mongo"
 
 func main() {
 
 	PrepareTemplate()
 
-	DialConnection(databaseUrl)
+	DialConnection(databaseURL)
 
 	defer session.Close()
 

@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"github.com/gobuffalo/packr"
 	"github.com/mileusna/crontab"
-	"io/ioutil"
 	"net/http"
 )
 

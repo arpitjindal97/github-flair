@@ -12,7 +12,7 @@ import (
 // while creating the flair
 func TestCreateFlair(t *testing.T) {
 
-	databaseUrl = "localhost"
+	databaseURL = "localhost"
 	go func() {
 		main()
 	}()
