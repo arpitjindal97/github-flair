@@ -1,4 +1,3 @@
-env ?= devel
 
 PACKR := $(GOPATH)/bin/packr
 GOLINT := $(GOPATH)/bin/golint
@@ -23,26 +22,21 @@ build: dependency $(PACKR) $(GOLINT) clean
 	golint .
 	go vet
 	packr
-ifeq ($(env),prod)
-	@echo "Making Production build"
-	GOOS=linux GOARCH=amd64 go build -tags prod -o output/flair-prod-linux-amd64
+	@echo "Compiling project"
+	GOOS=linux GOARCH=amd64 go build -tags prod -o output/flair-linux-amd64
 	packr clean
-	docker-compose -f prod-compose.yml build
-else
-	@echo "Making Development build"
-	GOOS=linux GOARCH=amd64 go build -tags devel -o output/flair-devel-linux-amd64
-	packr clean
-	docker-compose -f devel-compose.yml build
-endif
-
+	@echo "Building docker image"
+	docker-compose -f docker-compose.yml build
 
 run: build
-ifeq ($(env),prod)
-	@echo "Running Production images"
-	docker-compose -f prod-compose.yml up
-else
-	@echo "Running Development images"
-	docker-compose -f devel-compose.yml up
-endif
+	@echo "Running docker image"
+	docker-compose -f docker-compose.yml up
+
+test: $(PACKR)
+	docker run -d --name=mongo-test -p 27017:27017 mongo
+	packr
+	go test -v -race -coverprofile=coverage.txt -covermode=atomic
+	packr clean
+	docker stop mongo-test && docker rm mongo-test
 
 .PHONY: test clean

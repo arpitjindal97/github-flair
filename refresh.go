@@ -34,7 +34,6 @@ func RefreshImages() {
 			png.Encode(buffer, image)
 			user.Dark.Data = buffer.Bytes()
 
-			user.Timestamp = time.Now()
 			UpdateUser(user)
 
 		}

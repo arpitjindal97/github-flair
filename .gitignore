@@ -1,6 +1,6 @@
 *.swp
 secrets/
-data-db/
 output/
+*packr*
 coverage.txt
 profile.out

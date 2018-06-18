@@ -2,10 +2,8 @@ version: '3'
 services:
     web:
         build: .
-        image: github-flair-web:prod
+        image: github-flair-web:latest
         ports:
-            - "443:443"
+            - "443:8443"
     mongo:
         image: "mongo:latest"
-        ports:
-            - "27017"

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/globalsign/mgo"
 	"github.com/globalsign/mgo/bson"
 	"time"
@@ -20,7 +21,10 @@ var collection *mgo.Collection
 // DialConnection creates sesson with mongo
 func DialConnection(url string) {
 
-	session, _ = mgo.Dial(url)
+	session, err := mgo.Dial(url)
+	if err != nil {
+		fmt.Println("can't connect to database")
+	}
 	collection = session.DB("flair").C("github")
 }
 
@@ -57,8 +61,8 @@ func UpdateUser(user User) {
 	query := bson.M{"username": user.Username}
 	change := bson.M{"$set": bson.M{
 		"timestamp": user.Timestamp,
-		"Clean":     user.Clean,
-		"Dark":      user.Dark}}
+		"clean":     user.Clean,
+		"dark":      user.Dark}}
 
 	collection.Update(query, change)
 }

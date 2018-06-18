@@ -1,9 +1,0 @@
-version: '3.3'
-services:
-    web:
-        build: .
-        image: github-flair-web:devel
-        ports:
-            - "8080:8080"
-    mongo:
-        image: "mongo:latest"

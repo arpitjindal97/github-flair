@@ -13,6 +13,7 @@ import (
 func TestCreateFlair(t *testing.T) {
 
 	databaseURL = "localhost"
+	sslBit = false
 	go func() {
 		main()
 	}()
@@ -20,16 +21,16 @@ func TestCreateFlair(t *testing.T) {
 	time.Sleep(time.Second * 2)
 
 	log.Println("Requesting arpitjindal97 clean flair")
-	RequestFlair("http://localhost:8080/github/arpitjindal97.png", t)
+	RequestFlair("http://localhost:8443/github/arpitjindal97.png", t)
 
 	log.Println("Requesting narkoz dark flair for png image")
-	RequestFlair("http://localhost:8080/github/narkoz.png?theme=dark", t)
+	RequestFlair("http://localhost:8443/github/narkoz.png?theme=dark", t)
 
 	log.Println("Refreshing the images")
 	RefreshImages()
 
 	log.Println("Requesting arpitjindal97 clean flair")
-	RequestFlair("http://localhost:8080/github/arpitjindal97.png", t)
+	RequestFlair("http://localhost:8443/github/arpitjindal97.png", t)
 
 }
 
