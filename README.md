@@ -1,3 +1,4 @@
+
 # Github Flair 
 
 [![Build status](https://api.travis-ci.org/arpitjindal97/github-flair.svg?branch=master)](https://travis-ci.org/arpitjindal97/github-flair)
@@ -13,13 +14,13 @@ alt="profile for Arpit Agarwal on Github, a free distributed version control and
 
 ## Themes
 
+ - <b>Clean Theme</b> *(default)*
+
 [![Clean theme](https://ph4nt0m.ml/github/arpitjindal97.png)](https://ph4nt0m.ml/github/arpitjindal97.png)
 
-<b>Clean Theme</b> *(default)*
+ - <b>Dark Theme</b> 
 
 [![Dark theme](https://ph4nt0m.ml/github/arpitjindal97.png?theme=dark)](https://ph4nt0m.ml/github/arpitjindal97.png?theme=dark)
-
-<b>Dark Theme</b> 
 
 For dark theme just append `theme=dark` in the image url.
 
@@ -28,5 +29,9 @@ For dark theme just append `theme=dark` in the image url.
 The image is build when you first open it. It is then stored on server. Images are refreshed in every 24h. If the last time you opened image is more then 5 days then it is deleted from server. It will be created again when opened again.  
 
 So, the image will open instantly while it is residing in server.
+
+## Contribution
+
+See [CONTRIBUTION.md](CONTRIBUTION.md)
 
 PRs are apprieciated. 
