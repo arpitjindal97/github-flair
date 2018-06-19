@@ -16,10 +16,7 @@ script:
     # Make sure if project is building
     - make build
     # Testing the project
-    - docker run -d -p 27017:27017 mongo
-    - packr
-    - go test -v -race -coverprofile=coverage.txt -covermode=atomic
-    - packr clean
+    - make test
 
 after_success:
     - bash <(curl -s https://codecov.io/bash)

@@ -19,11 +19,12 @@ clean:
 	rm -rf output
 
 build: dependency $(PACKR) $(GOLINT) clean
+	mkdir -p secrets
 	golint .
 	go vet
 	packr
 	@echo "Compiling project"
-	GOOS=linux GOARCH=amd64 go build -tags prod -o output/flair-linux-amd64
+	GOOS=linux GOARCH=amd64 go build -o output/flair-linux-amd64
 	packr clean
 	@echo "Building docker image"
 	docker-compose -f docker-compose.yml build
