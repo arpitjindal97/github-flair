@@ -27,9 +27,11 @@ func Flair(w http.ResponseWriter, r *http.Request) {
 		theme = "clean"
 	}
 
-	log.Println(username)
+	log.Println("User request " + username)
 
 	user := GetUser(username)
+
+	user.Timestamp = time.Now()
 
 	if user.Username == "" {
 
@@ -45,9 +47,10 @@ func Flair(w http.ResponseWriter, r *http.Request) {
 		png.Encode(buffer, image)
 		user.Dark.Data = buffer.Bytes()
 
-		user.Timestamp = time.Now()
+		go InsertUser(user)
 
-		InsertUser(user)
+	} else {
+		go UpdateUser(user)
 	}
 
 	var byt []byte
